@@ -80,10 +80,6 @@ async def cancel(update: Update, _) -> None:
         logger.error("The message user cannot be accessed")
         return
 
-    if not update.message:
-        logger.info("The update has no message")
-        return
-
     if user.id not in last_command:
         await update.message.reply_text("No previous action to cancel")
         return
@@ -99,10 +95,6 @@ async def handle_message(update: Update, _) -> None:
     user = update.message.from_user
     if not user:
         logger.error("The message user cannot be accessed")
-        return
-
-    if not update.message:
-        logger.info("The update has no message")
         return
 
     logger.info(f"User {user.name} input a message")
