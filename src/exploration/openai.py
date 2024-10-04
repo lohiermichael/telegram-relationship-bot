@@ -1,7 +1,7 @@
 import os
 
-from openai import OpenAI
 from dotenv import load_dotenv
+from openai import OpenAI
 
 from src.logger import setup_logger
 
@@ -9,6 +9,7 @@ load_dotenv()
 
 # Set up logging
 logger = setup_logger()
+
 
 def main() -> None:
     # Retrieve the OpenAI API key from environment variables
@@ -32,6 +33,7 @@ def main() -> None:
     )
 
     print(completion.choices[0].message)
+
 
 if __name__ == "__main__":
     main()

@@ -3,7 +3,8 @@
 import logging
 import os
 
-def setup_logger(log_file: str="app.log", level: str="INFO") -> logging.Logger:
+
+def setup_logger(log_file: str = "app.log", level: str = "INFO") -> logging.Logger:
     # Create the logger
     logger = logging.getLogger("Telegram Relationship Bot")
 
@@ -28,7 +29,9 @@ def setup_logger(log_file: str="app.log", level: str="INFO") -> logging.Logger:
     console_handler.setLevel(log_level)  # Log at the selected level for the console
 
     # Create a formatter and set it for both handlers
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    formatter = logging.Formatter(
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
     file_handler.setFormatter(formatter)
     console_handler.setFormatter(formatter)
 
