@@ -1,0 +1,11 @@
+services:
+  telegram-relationship-prod-bot:
+    build:
+      context: ../..  # Build from the project root directory
+      dockerfile: ./docker/prod/Dockerfile  # Use the prod Dockerfile
+    container_name: telegram-relationship-prod-bot
+    env_file:
+      - .env  # Load the prod-specific environment variables
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    command: python src/main.py

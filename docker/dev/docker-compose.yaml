@@ -1,0 +1,15 @@
+services:
+  telegram-relationship-dev-bot:
+    build:
+      context: ../..  # Build from the project root directory
+      dockerfile: ./docker/dev/Dockerfile
+    container_name: telegram-relationship-dev-bot
+    volumes:
+      # Mount the source code directory to the container for hot-reloading
+      - ../../src:/app/src
+    env_file:
+      - .env  # Load the dev-specific environment variables
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    command: watchmedo auto-restart --pattern="*.py" --recursive -- python src/main.py
+    restart: always
