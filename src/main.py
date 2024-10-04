@@ -7,15 +7,17 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
+from src.data import get_data, save_data, store_last_command, store_response
 from src.logger import setup_logger
 
 load_dotenv()
 logger = setup_logger()
 
+# Load persistent data from JSON file
+data = get_data()
+
 daily_question = "What's your ideal date?"
 
-user_responses = {}
-last_command = {}
 
 # Constants for command strings
 COMMAND_ANSWER = "answer"
@@ -48,9 +50,9 @@ async def answer(update: Update, _) -> None:
     if not user:
         logger.error("The message user cannot be accessed")
         return
-    user_id = user.id
+    user_id = str(user.id)
 
-    if user_id in user_responses:
+    if user_id in data["user_responses"]:
         await update.message.reply_text(
             "You have already responded to the question of the day."
         )
@@ -62,12 +64,13 @@ async def answer(update: Update, _) -> None:
             Hey {user.first_name},\n
             Please give your answer to the question of the day:\n
             *{daily_question}*
-        """
+            """
         ),
         parse_mode="MarkdownV2",
     )
 
-    last_command[user_id] = COMMAND_ANSWER
+    store_last_command(user_id, COMMAND_ANSWER)
+    logger.info(f"Last command /{COMMAND_ANSWER} stored in data.json")
 
 
 async def cancel(update: Update, _) -> None:
@@ -80,11 +83,14 @@ async def cancel(update: Update, _) -> None:
         logger.error("The message user cannot be accessed")
         return
 
-    if user.id not in last_command:
+    user_id = str(user.id)
+
+    if user_id not in data["last_command"]:
         await update.message.reply_text("No previous action to cancel")
         return
 
-    del last_command[user.id]
+    del data["last_command"][user_id]
+    save_data(data)
     await update.message.reply_text("Your last action has been cancelled")
 
 
@@ -99,12 +105,20 @@ async def handle_message(update: Update, _) -> None:
 
     logger.info(f"User {user.name} input a message")
 
+    user_id = str(user.id)
+
     # Check the last command issued by the user
-    if last_command.get(user.id) != COMMAND_ANSWER:
+    user_last_command = data["last_command"].get(user_id)
+    if not user_last_command or user_last_command["command"] != COMMAND_ANSWER:
+        logger.info(f"Last command was not /{COMMAND_ANSWER}")
         await update.message.reply_text(HELPER)
         return
 
     text = update.message.text
+
+    del data["last_command"][user_id]
+    store_response(user_id, text)
+
     await update.message.reply_text(f"You said: {text}")
     logger.info(f"Message received: {text}")
 
