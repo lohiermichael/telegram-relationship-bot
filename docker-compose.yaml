@@ -1,0 +1,12 @@
+services:
+  python-app:
+    build: .
+    container_name: telegram-relationship-bot-container
+    volumes:
+      - .:/app  # Mount the current directory to the /app directory in the container
+    environment:
+      - PYTHONUNBUFFERED=1  # Ensure logs are output in real-time
+    ports:
+      - "8000:8000"  # Map port 8000 on the host to port 8000 in the container
+    # command: python src/main.py  # Define the command to run your Python app
+    restart: always  # Automatically restart the container if it crashes
