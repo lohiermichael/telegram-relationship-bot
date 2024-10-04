@@ -85,7 +85,7 @@ async def cancel(update: Update, _) -> None:
         return
 
     del last_command[user.id]
-    await update.message.reply_text("You previous action has been cancelled")
+    await update.message.reply_text("Your last action has been cancelled")
 
 
 async def handle_message(update: Update, _) -> None:
