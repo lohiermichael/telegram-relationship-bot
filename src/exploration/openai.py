@@ -1,3 +1,5 @@
+# Copyright © Michael Lohier 2024 All rights reserved.
+
 import os
 
 from dotenv import load_dotenv
