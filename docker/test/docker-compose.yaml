@@ -1,0 +1,18 @@
+services:
+  telegram-relationship-test-bot:
+    build:
+      context: ../..  # Build from the project root directory
+      dockerfile: ./docker/test/Dockerfile
+    container_name: telegram-relationship-test-bot
+    volumes:
+      - ../../src:/app/src
+      - ../../tests:/app/tests
+    env_file:
+      - .env  # Load the test-specific environment variables
+    command:
+      watchmedo auto-restart
+      --patterns='*.py'
+      --recursive
+      --debounce-interval=2
+      --no-restart-on-command-exit
+      -- pytest tests/
