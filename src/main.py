@@ -7,17 +7,14 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
-from src.data import get_data, save_data, store_last_command, store_response
+from src.data import Data
 from src.logger import setup_logger
 
 load_dotenv()
 logger = setup_logger()
 
-# Load persistent data from JSON file
-data = get_data()
-
-daily_question = "What's your ideal date?"
-
+# Singleton instance of Data to access stored information
+data_instance = Data()
 
 # Constants for command strings
 COMMAND_ANSWER = "answer"
@@ -52,11 +49,13 @@ async def answer(update: Update, _) -> None:
         return
     user_id = str(user.id)
 
-    if user_id in data["user_responses"]:
+    if data_instance.has_user_responded(user_id):
         await update.message.reply_text(
             "You have already responded to the question of the day."
         )
         return
+
+    daily_question = "What is your ideal date?"
 
     await update.message.reply_text(
         textwrap.dedent(
@@ -69,8 +68,9 @@ async def answer(update: Update, _) -> None:
         parse_mode="MarkdownV2",
     )
 
-    store_last_command(user_id, COMMAND_ANSWER)
-    logger.info(f"Last command /{COMMAND_ANSWER} stored in data.json")
+    # Store the last command used
+    data_instance.store_last_command(user_id, COMMAND_ANSWER)
+    logger.info(f"Last command /{COMMAND_ANSWER} stored for user {user.name}")
 
 
 async def cancel(update: Update, _) -> None:
@@ -85,13 +85,13 @@ async def cancel(update: Update, _) -> None:
 
     user_id = str(user.id)
 
-    if user_id not in data["last_command"]:
-        await update.message.reply_text("No previous action to cancel")
+    if not data_instance.has_last_command(user_id):
+        await update.message.reply_text("No previous action to cancel.")
         return
 
-    del data["last_command"][user_id]
-    save_data(data)
-    await update.message.reply_text("Your last action has been cancelled")
+    data_instance.delete_last_command(user_id)
+    await update.message.reply_text("Your last action has been cancelled.")
+    logger.info(f"Last command for user {user_id} cancelled.")
 
 
 async def handle_message(update: Update, _) -> None:
@@ -108,19 +108,17 @@ async def handle_message(update: Update, _) -> None:
     user_id = str(user.id)
 
     # Check the last command issued by the user
-    user_last_command = data["last_command"].get(user_id)
-    if not user_last_command or user_last_command["command"] != COMMAND_ANSWER:
+    user_last_command = data_instance.get_last_command(user_id)
+    if not user_last_command or user_last_command != COMMAND_ANSWER:
         logger.info(f"Last command was not /{COMMAND_ANSWER}")
         await update.message.reply_text(HELPER)
-        return
 
+    # Store the user's response
     text = update.message.text
-
-    del data["last_command"][user_id]
-    store_response(user_id, text)
+    data_instance.store_response(user_id, text)
 
     await update.message.reply_text(f"You said: {text}")
-    logger.info(f"Message received: {text}")
+    logger.info(f"Response stored for user {user_id}: {text}")
 
 
 def main() -> None:

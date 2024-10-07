@@ -5,53 +5,63 @@ import os
 from datetime import datetime
 
 from src.logger import setup_logger
+from src.utils import Singleton
 
 logger = setup_logger()
 
-ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_FILE = os.path.join(ROOT_DIR, "data.json")
-DATA_TEMPLATE_FILE = os.path.join(ROOT_DIR, "data_template.json")
 
+class Data(metaclass=Singleton):
+    def __init__(self):
+        self.root_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_file = os.path.join(self.root_dir, "data.json")
+        self.template_file = os.path.join(self.root_dir, "data_template.json")
+        self.data = self._load_data()
 
-def _load_data():
-    with open(DATA_TEMPLATE_FILE, "r") as f:
-        data = json.load(f)
-    try:
-        with open(DATA_FILE, "r") as f:
+    def _load_data(self):
+        try:
+            with open(self.data_file, "r") as f:
+                return json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError):
+            logger.error(
+                f"Couldn't load data from {self.data_file}, creating an empty one."
+            )
+            return self._load_template()
+
+    def _load_template(self):
+        with open(self.template_file, "r") as f:
             data = json.load(f)
-    except (FileNotFoundError, json.JSONDecodeError):
-        logger.error(f"Couldn't load data from {DATA_FILE}, create an empty one.")
-        save_data(data)
-    finally:
+        self._save_data(data)
         return data
 
+    def _save_data(self, data):
+        with open(self.data_file, "w") as f:
+            json.dump(data, f, indent=4)
 
-def save_data(data):
-    with open(DATA_FILE, "w") as f:
-        json.dump(data, f, indent=4)
+    def store_last_command(self, user_id, command):
+        self.data["last_command"][user_id] = {
+            "command": command,
+            "timestamp": datetime.now().isoformat(),
+        }
+        self._save_data(self.data)
 
+    def get_last_command(self, user_id):
+        return self.data["last_command"].get(user_id, {}).get("command")
 
-# Load data at startup
-data = _load_data()
+    def has_last_command(self, user_id):
+        return user_id in self.data["last_command"]
 
+    def delete_last_command(self, user_id):
+        if user_id in self.data["last_command"]:
+            del self.data["last_command"][user_id]
+            self._save_data(self.data)
 
-# To store a response
-def store_response(user_id, response):
-    data["user_responses"][user_id] = {
-        "response": response,
-        "timestamp": datetime.now().isoformat(),
-    }
-    save_data(data)
+    def store_response(self, user_id, response):
+        """Store a user response."""
+        self.data["user_responses"][user_id] = {
+            "response": response,
+            "timestamp": datetime.now().isoformat(),
+        }
+        self._save_data(self.data)
 
-
-# To store the last command
-def store_last_command(user_id, command):
-    data["last_command"][user_id] = {
-        "command": command,
-        "timestamp": datetime.now().isoformat(),
-    }
-    save_data(data)
-
-
-def get_data():
-    return data
+    def has_user_responded(self, user_id):
+        return user_id in self.data["user_responses"]
