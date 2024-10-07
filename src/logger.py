@@ -13,11 +13,8 @@ def setup_logger(log_file: str = "app.log", level: str = "INFO") -> logging.Logg
         return logger
 
     # Set the logging level dynamically based on the input
-    log_level = os.getenv("LOG_LEVEL")
-    if not log_level:
-        raise ValueError("The LOG_LEVEL environment variable is not defined")
+    log_level = os.getenv("LOG_LEVEL", "INFO")
 
-    log_level = getattr(logging, level.upper(), logging.INFO)
     logger.setLevel(log_level)
 
     # Create a file handler to write log messages to a file
