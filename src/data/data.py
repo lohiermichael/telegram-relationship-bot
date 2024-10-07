@@ -65,3 +65,10 @@ class Data(metaclass=Singleton):
 
     def has_user_responded(self, user_id):
         return user_id in self.data["user_responses"]
+
+    def get_daily_question(self):
+        return self.data["daily_question"]
+
+    def store_daily_question(self, question):
+        self.data["daily_question"] = question
+        self._save_data(self.data)

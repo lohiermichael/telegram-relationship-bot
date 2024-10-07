@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 from telegram import Update
 from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
+from src.ai import AI
 from src.data import Data
 from src.logger import setup_logger
 
@@ -15,6 +16,9 @@ logger = setup_logger()
 
 # Singleton instance of Data to access stored information
 data_instance = Data()
+
+# Singleton instance of the AI
+ai = AI()
 
 # Constants for command strings
 COMMAND_ANSWER = "answer"
@@ -55,7 +59,7 @@ async def answer(update: Update, _) -> None:
         )
         return
 
-    daily_question = "What is your ideal date?"
+    daily_question = ai.get_daily_question()
 
     await update.message.reply_text(
         textwrap.dedent(
