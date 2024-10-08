@@ -27,7 +27,7 @@ class AI(metaclass=Singleton):
         pass
         self.template_variables: Dict[str, str] = {}
         self.messages: List[Tuple[str, str]] = []
-        self.model = ChatOpenAI(model="gpt-4o", max_tokens=150)
+        self.model = ChatOpenAI(model="gpt-4o", max_tokens=170)
 
     def get_daily_question(self) -> str:
         daily_question = data_instance.get_daily_question()
