@@ -24,7 +24,7 @@ which docker-compose
 docker-compose --version
 
 # Create a folder for the destination
-smkdir downloads
+mkdir downloads
 cd downloads/
 
 ################
