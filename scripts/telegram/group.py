@@ -38,7 +38,6 @@ async def main() -> None:
     bot_group_id = await get_bot_group_id(bot)
 
     # send a test message in the group with the bot
-    breakpoint()
     await bot.send_message(chat_id=bot_group_id, text="Test message")
     logger.info("Message properly sent to the group")
 
