@@ -24,6 +24,7 @@ ai = AI()
 COMMAND_ANSWER = "answer"
 COMMAND_CANCEL = "cancel"
 COMMAND_HELP = "help"
+COMMAND_START = "start"
 
 HELPER = f"""
 Here are the available commands. Only these can be used to interact with the bot.
@@ -103,6 +104,27 @@ async def cancel(update: Update, _) -> None:
     logger.info(f"Last command for user {user_id} cancelled.")
 
 
+async def start(update: Update, _) -> None:
+    logger.info(f"Command /{COMMAND_START} used")
+
+    if not update.message:
+        logger.info("The update has no message")
+        return
+    user = update.message.from_user
+    if not user:
+        logger.error("The message user cannot be accessed")
+        return
+    data_instance.store_user(user)
+
+    await update.message.reply_text(
+        f"""
+        Hello {user.first_name}! You have started interacting with the bot.
+
+        {HELPER}
+        """
+    )
+
+
 async def handle_message(update: Update, _) -> None:
     if not update.message:
         logger.info("The update has no message")
@@ -111,9 +133,6 @@ async def handle_message(update: Update, _) -> None:
     if not user:
         logger.error("The message user cannot be accessed")
         return
-
-    logger.info(f"User {user.name} input a message")
-
     user_id = str(user.id)
 
     # Check the last command issued by the user
@@ -136,9 +155,11 @@ def main() -> None:
         logger.error("The bot token is not defined")
         return
     application = Application.builder().token(BOT_TOKEN).build()
+
     application.add_handler(CommandHandler(COMMAND_ANSWER, answer))
     application.add_handler(CommandHandler(COMMAND_CANCEL, cancel))
     application.add_handler(CommandHandler(COMMAND_HELP, help))
+    application.add_handler(CommandHandler(COMMAND_START, start))
 
     application.add_handler(
         MessageHandler(filters.TEXT & ~filters.COMMAND, handle_message)

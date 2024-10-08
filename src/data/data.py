@@ -72,3 +72,11 @@ class Data(metaclass=Singleton):
     def store_daily_question(self, question):
         self.data["daily_question"] = question
         self._save_data(self.data)
+
+    def store_user(self, user):
+        self.data["users"][str(user.id)] = {
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "username": user.username,
+        }
+        self._save_data(self.data)
