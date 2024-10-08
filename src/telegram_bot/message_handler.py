@@ -1,6 +1,5 @@
 # Copyright © Michael Lohier 2024 All rights reserved.
 
-import re
 import textwrap
 
 from telegram import Update
@@ -8,6 +7,7 @@ from telegram import Update
 from src.ai import AI
 from src.data.data import Data, UserStatus
 from src.logger import setup_logger
+from src.utils import format_markdown_v2
 
 from .commands import COMMAND_ANSWER, COMMAND_START, HELPER
 
@@ -69,12 +69,6 @@ async def handle_message(update: Update, _) -> None:
         )
 
         suggestions = ai.get_suggestions()
-        # Remove unnecessary escape characters
-        suggestions = suggestions.replace("\\", "")  # Remove backslashes
-
-        # A single * is working to make text bold
-        suggestions = suggestions.replace("**", "*")
-        # Escape characters for MarkdownV2
-        suggestions = re.sub(r"([_[\]()~`>#+\-=|{}.!])", r"\\\1", suggestions)
+        suggestions = format_markdown_v2(suggestions)
 
         await update.message.reply_text(suggestions, parse_mode="MarkdownV2")
