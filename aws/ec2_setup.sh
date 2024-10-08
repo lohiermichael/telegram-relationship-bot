@@ -11,7 +11,7 @@ sudo yum update -y
 sudo amazon-linux-extras install docker -y
 sudo service docker start
 sudo usermod -a -G docker ec2-user
-docker version
+docker --version
 
 # Install docker-compose
 sudo curl \
@@ -21,7 +21,7 @@ sudo chmod +x /usr/local/bin/docker-compose
 # Make an alias
 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 which docker-compose
-docker-compose version
+docker-compose --version
 
 # Create a folder for the destination
 smkdir downloads
