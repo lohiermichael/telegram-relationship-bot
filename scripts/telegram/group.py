@@ -9,7 +9,7 @@ from src.logger import setup_logger
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
 ROOT_DIR = os.path.dirname(os.path.dirname(script_directory))
-load_dotenv(os.path.join(ROOT_DIR, "docker/dev/.env"))
+load_dotenv(os.path.join(ROOT_DIR, "docker/prod/.env"))
 
 logger = setup_logger()
 
