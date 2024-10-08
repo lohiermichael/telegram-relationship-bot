@@ -68,7 +68,9 @@ async def answer(update: Update, _) -> None:
             f"""
             Hey {user.first_name},\n
             Please give your answer to the question of the day:\n
-            *{daily_question}*
+            *{daily_question}*\n
+
+            You need to long press this message an click on "Reply"
             """
         ),
         parse_mode="MarkdownV2",
