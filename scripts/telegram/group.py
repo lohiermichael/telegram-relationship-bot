@@ -8,8 +8,7 @@ from telegram import Bot
 from src.logger import setup_logger
 
 script_directory = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(script_directory)
-print(ROOT_DIR)
+ROOT_DIR = os.path.dirname(os.path.dirname(script_directory))
 load_dotenv(os.path.join(ROOT_DIR, "docker/dev/.env"))
 
 logger = setup_logger()
