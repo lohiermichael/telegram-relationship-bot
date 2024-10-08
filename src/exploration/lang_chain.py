@@ -22,7 +22,6 @@ if not OPENAI_API_KEY:
 
 
 def main() -> None:
-
     model = ChatOpenAI(model="gpt-4o", max_tokens=150)
 
     # Step 1: Generate a relationship-strengthening question

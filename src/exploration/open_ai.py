@@ -50,7 +50,6 @@ def get_response_from_request(client: OpenAI, request: str) -> str:
 
 
 class OpenAIConversation:
-
     BOT_ROLE = textwrap.dedent(
         """
         You are a relationship expert that helps couples strenghten their
@@ -64,7 +63,6 @@ class OpenAIConversation:
         ]
 
     def respond_to(self, message: str) -> str:
-
         self.messages.append({"role": "user", "content": message})
         completion = client.chat.completions.create(
             model="gpt-4o",
