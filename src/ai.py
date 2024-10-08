@@ -8,9 +8,12 @@ from langchain.schema.output_parser import StrOutputParser
 from langchain_openai.chat_models import ChatOpenAI
 
 from src.data import Data
+from src.logger import setup_logger
 from src.utils import Singleton
 
 data_instance = Data()
+
+logger = setup_logger()
 
 QUESTION_TEMPLATE = textwrap.dedent(
     """
@@ -22,6 +25,17 @@ QUESTION_TEMPLATE = textwrap.dedent(
 )
 
 SYSTEM_ROLE = """You are a couple therapist"""
+
+RESPONSE_TEMPLATE = textwrap.dedent(
+    """
+    Here are two responses to the question:
+    - {user1_name}'s response: {user1_response}
+    - {user2_name}'s response: {user2_response}
+
+    Based on these responses, provide suggestions in maximum 150 tokens on
+    how they can strengthen their relationship with concreate actions.
+    """
+)
 
 
 class AI(metaclass=Singleton):
@@ -59,3 +73,17 @@ class AI(metaclass=Singleton):
         self.messages.append(("ai", daily_question))
 
         return daily_question
+
+    def get_suggestions(self) -> str:
+        self.messages.append(("human", RESPONSE_TEMPLATE))
+
+        # Get data from storage
+        users_info = data_instance.get_data_for_suggestions()
+        self.template_variables.update(users_info)
+
+        message_template = ChatPromptTemplate.from_messages(self.messages)
+
+        chain = message_template | self.model | StrOutputParser()
+        suggestions = chain.invoke(self.template_variables)
+
+        return suggestions

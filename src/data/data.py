@@ -70,6 +70,9 @@ class Data(metaclass=Singleton):
         }
         self._save_data(self.data)
 
+    def get_number_responses(self) -> int:
+        return len(self.data["user_responses"].keys())
+
     def has_user_responded(self, user_id):
         return user_id in self.data["user_responses"]
 
@@ -94,3 +97,14 @@ class Data(metaclass=Singleton):
         if len(self.data["users"].keys()) < 2:
             return UserStatus.NEED_TO_START
         return UserStatus.NOT_ALLOWED
+
+    def get_data_for_suggestions(self):
+        data_for_suggestions = {}
+        user_index = 1
+        for user_id, user in self.data["users"].items():
+            user_response = self.data["user_responses"][user_id]["response"]
+            data_for_suggestions[f"user{user_index}_name"] = user["first_name"]
+            data_for_suggestions[f"user{user_index}_response"] = user_response
+            user_index += 1
+
+        return data_for_suggestions

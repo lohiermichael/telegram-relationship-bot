@@ -1,6 +1,7 @@
 # Copyright © Michael Lohier 2024 All rights reserved.
 
 import os
+import re
 import textwrap
 
 from dotenv import load_dotenv
@@ -192,9 +193,38 @@ async def handle_message(update: Update, _) -> None:
     # Store the user's response
     text = update.message.text
     data_instance.store_response(user_id, text)
+    logger.info(f"Response stored for user {user.name}: {text}")
 
-    await update.message.reply_text(f"You said: {text}")
-    logger.info(f"Response stored for user {user_id}: {text}")
+    number_responses = data_instance.get_number_responses()
+    if number_responses == 1:
+        await update.message.reply_text(
+            textwrap.dedent(
+                """
+            You are the first one to answer the question, let's wait the second
+            answer to generate the suggestions
+            """
+            )
+        )
+    elif number_responses == 2:
+        await update.message.reply_text(
+            textwrap.dedent(
+                """
+            Both of your answers are gathered, the AI is gonna come up with
+            suggesetions
+            """
+            )
+        )
+
+        suggestions = ai.get_suggestions()
+        # Remove unnecessary escape characters
+        suggestions = suggestions.replace("\\", "")  # Remove backslashes
+
+        # A single * is working to make text bold
+        suggestions = suggestions.replace("**", "*")
+        # Escape characters for MarkdownV2
+        suggestions = re.sub(r"([_[\]()~`>#+\-=|{}.!])", r"\\\1", suggestions)
+
+        await update.message.reply_text(suggestions, parse_mode="MarkdownV2")
 
 
 def main() -> None:
