@@ -9,6 +9,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 
 from src.ai import AI
 from src.data import Data
+from src.data.data import UserStatus
 from src.logger import setup_logger
 
 load_dotenv()
@@ -41,6 +42,21 @@ async def help(update: Update, _) -> None:
     if not update.message:
         logger.info("The update has no message")
         return
+    user = update.message.from_user
+    if not user:
+        logger.error("The message user cannot be accessed")
+        return
+    user_id = str(user.id)
+    user_status = data_instance.get_user_status(user_id)
+    if user_status == UserStatus.NEED_TO_START:
+        await update.message.reply_text(
+            f"You need to type /{COMMAND_START} to start using the bot"
+        )
+        return
+    if user_status == UserStatus.NOT_ALLOWED:
+        await update.message.reply_text("You are not authorized to use this bot.")
+        return
+
     await update.message.reply_text(HELPER)
 
 
@@ -55,6 +71,15 @@ async def answer(update: Update, _) -> None:
         logger.error("The message user cannot be accessed")
         return
     user_id = str(user.id)
+    user_status = data_instance.get_user_status(user_id)
+    if user_status == UserStatus.NEED_TO_START:
+        await update.message.reply_text(
+            f"You need to type /{COMMAND_START} to start using the bot"
+        )
+        return
+    if user_status == UserStatus.NOT_ALLOWED:
+        await update.message.reply_text("You are not authorized to use this bot.")
+        return
 
     if data_instance.has_user_responded(user_id):
         await update.message.reply_text(
@@ -94,6 +119,15 @@ async def cancel(update: Update, _) -> None:
         return
 
     user_id = str(user.id)
+    user_status = data_instance.get_user_status(user_id)
+    if user_status == UserStatus.NEED_TO_START:
+        await update.message.reply_text(
+            f"You need to type /{COMMAND_START} to start using the bot"
+        )
+        return
+    if user_status == UserStatus.NOT_ALLOWED:
+        await update.message.reply_text("You are not authorized to use this bot.")
+        return
 
     if not data_instance.has_last_command(user_id):
         await update.message.reply_text("No previous action to cancel.")
@@ -113,6 +147,11 @@ async def start(update: Update, _) -> None:
     user = update.message.from_user
     if not user:
         logger.error("The message user cannot be accessed")
+        return
+    user_id = str(user.id)
+    user_status = data_instance.get_user_status(user_id)
+    if user_status == UserStatus.NOT_ALLOWED:
+        await update.message.reply_text("You are not authorized to use this bot.")
         return
     data_instance.store_user(user)
 
@@ -134,6 +173,15 @@ async def handle_message(update: Update, _) -> None:
         logger.error("The message user cannot be accessed")
         return
     user_id = str(user.id)
+    user_status = data_instance.get_user_status(user_id)
+    if user_status == UserStatus.NEED_TO_START:
+        await update.message.reply_text(
+            f"You need to type /{COMMAND_START} to start using the bot"
+        )
+        return
+    if user_status == UserStatus.NOT_ALLOWED:
+        await update.message.reply_text("You are not authorized to use this bot.")
+        return
 
     # Check the last command issued by the user
     user_last_command = data_instance.get_last_command(user_id)

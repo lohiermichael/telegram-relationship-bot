@@ -3,11 +3,18 @@
 import json
 import os
 from datetime import datetime
+from enum import Enum
 
 from src.logger import setup_logger
 from src.utils import Singleton
 
 logger = setup_logger()
+
+
+class UserStatus(Enum):
+    ALLOWED = 1
+    NOT_ALLOWED = 2
+    NEED_TO_START = 3
 
 
 class Data(metaclass=Singleton):
@@ -80,3 +87,10 @@ class Data(metaclass=Singleton):
             "username": user.username,
         }
         self._save_data(self.data)
+
+    def get_user_status(self, user_id) -> UserStatus:
+        if user_id in self.data["users"].keys():
+            return UserStatus.ALLOWED
+        if len(self.data["users"].keys()) < 2:
+            return UserStatus.NEED_TO_START
+        return UserStatus.NOT_ALLOWED
