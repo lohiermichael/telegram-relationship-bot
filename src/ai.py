@@ -14,10 +14,10 @@ data_instance = Data()
 
 QUESTION_TEMPLATE = textwrap.dedent(
     """
-    Generate a max 50-token thoughtful question that a man named {man_name}
-    and a woman named {woman_name} in relationship can both answer to
-    strengthen our relationship. The question should be insightful and help
-    us understand each other better.
+    Generate a max 50-token thoughtful question that can be asked individually
+    to a man and a woman in relationship to strengthen their relationship. The
+    question should be insightful and help them understand and know each other
+    better. Be creative!
     """
 )
 
@@ -42,7 +42,7 @@ class AI(metaclass=Singleton):
         return daily_question
 
     def _generate_daily_question(self) -> str:
-        self.template_variables.update({"man_name": "Michael", "woman_name": "Katya"})
+        self.template_variables.update()
 
         self.messages = [
             ("system", "You are an assistant who is good at relationship"),
