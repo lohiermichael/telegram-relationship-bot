@@ -36,6 +36,13 @@ scp \
   -i aws/telegram-relationship-bot.pem \
   -r docker/ src/ .dockerignore ec2-user@{ec2_ip}:/home/ec2-user/downloads
 
+# Encrypt the private key to put on GitHub
+base64 \
+  -i aws/telegram-relationship-bot.pem \
+  -o aws/key.b64
+
+cat aws/key.b64 | pbcopy
+
 # ######
 # On EC2
 # ######
