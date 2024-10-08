@@ -35,7 +35,8 @@ Here are the available commands. Only these can be used to interact with the bot
 
 
 async def help(update: Update, _) -> None:
-    logger.info("Command /help used")
+    logger.info(f"Command /{COMMAND_HELP} used")
+
     if not update.message:
         logger.info("The update has no message")
         return
@@ -43,7 +44,8 @@ async def help(update: Update, _) -> None:
 
 
 async def answer(update: Update, _) -> None:
-    logger.info("Command /answer used")
+    logger.info(f"Command /{COMMAND_ANSWER} used")
+
     if not update.message:
         logger.info("The update has no message")
         return
@@ -78,7 +80,8 @@ async def answer(update: Update, _) -> None:
 
 
 async def cancel(update: Update, _) -> None:
-    logger.info("Command /cancel used")
+    logger.info(f"Command /{COMMAND_CANCEL} used")
+
     if not update.message:
         logger.info("The update has no message")
         return
