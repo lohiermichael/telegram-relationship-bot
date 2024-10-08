@@ -24,7 +24,6 @@ QUESTION_TEMPLATE = textwrap.dedent(
 
 class AI(metaclass=Singleton):
     def __init__(self) -> None:
-        pass
         self.template_variables: Dict[str, str] = {}
         self.messages: List[Tuple[str, str]] = []
         self.model = ChatOpenAI(model="gpt-4o", max_tokens=170)
