@@ -1,16 +1,42 @@
+# Choose Amazon Linux 2
+# Reference:
+# https://gist.github.com/npearce/6f3c7826c7499587f00957fee62f8ee9
+# ######
 # On EC2
+# ######
+
 sudo yum update -y
-sudo amazon-linux-extras install docker
+
+# Install docker
+sudo amazon-linux-extras install docker -y
 sudo service docker start
 sudo usermod -a -G docker ec2-user
-mkdir downloads
+docker version
+
+# Install docker-compose
+sudo curl \
+  -L https://github.com/docker/compose/releases/download/1.22.0/docker-compose-$(uname -s)-$(uname -m) \
+  -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+# Make an alias
+sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+which docker-compose
+docker-compose version
+
+# Create a folder for the destination
+smkdir downloads
 cd downloads/
 
+################
 # On dev machine
-scp -i telegram-relationship-bot.pem -r docker/ src/ ec2-user@15.188.11.88:/home/ec2-user/download
+################
 
+# Replace with EC2 IP
+scp \
+  -i aws/telegram-relationship-bot.pem \
+  -r docker/ src/ .dockerignore ec2-user@{ec2_ip}:/home/ec2-user/downloads
+
+# ######
 # On EC2
-docker compose -f docker/prod/docker-compose.yaml up --build
-sudo docker build -t telegram-relationship-bot:v1.0 -f docker/dev/Dockerfile .
-sudo docker images
-sudo docker run --env-file docker/dev/.env telegram-relationship-bot:v1.0
+# ######
+sudo docker-compose -f docker/prod/docker-compose.yaml up --build
