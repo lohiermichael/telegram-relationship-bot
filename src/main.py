@@ -49,10 +49,10 @@ def main() -> None:
 
     # Set up the scheduler
     scheduler = AsyncIOScheduler()
-    # Schedule a message to be sent every day at 9 AM
+    # Schedule a message to be sent every day at 8 AM
     scheduler.add_job(
         send_scheduled_message,
-        CronTrigger(hour=9, minute=0),
+        CronTrigger(hour=8, minute=0),
         args=[application, GROUP_CHAT_ID],
     )
 
