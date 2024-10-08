@@ -35,7 +35,7 @@ class Data(metaclass=Singleton):
 
     def _save_data(self, data):
         with open(self.data_file, "w") as f:
-            json.dump(data, f, indent=4)
+            json.dump(data, f, indent=2)
 
     def store_last_command(self, user_id, command):
         self.data["last_command"][user_id] = {
