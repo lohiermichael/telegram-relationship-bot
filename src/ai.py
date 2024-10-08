@@ -21,6 +21,8 @@ QUESTION_TEMPLATE = textwrap.dedent(
     """
 )
 
+SYSTEM_ROLE = """You are a couple therapist"""
+
 
 class AI(metaclass=Singleton):
     def __init__(self) -> None:
@@ -44,7 +46,7 @@ class AI(metaclass=Singleton):
         self.template_variables.update()
 
         self.messages = [
-            ("system", "You are an assistant who is good at relationship"),
+            ("system", SYSTEM_ROLE),
             ("human", QUESTION_TEMPLATE),
         ]
 
