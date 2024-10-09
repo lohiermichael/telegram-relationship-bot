@@ -18,20 +18,24 @@ jobs:
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.EC2_KEY }}" | base64 --decode > ~/.ssh/id_rsa
+          echo "${{ secrets.EC2_KEY }}" | base64 --decode \
+            > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      # Step 3: SSH into EC2 and perform Git pull to fetch latest changes
+      # Step 3: SSH into EC2 and perform Git pull, Docker commands with error handling
       - name: SSH into EC2 and deploy
         run: |
-          ssh \
-            -i ~/.ssh/id_rsa \
-            -o StrictHostKeyChecking=no \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} \
-            "cd /home/${{ secrets.EC2_USER }}/downloads/telegram-relationship-bot && \
-             git pull origin master && \
-             sudo docker-compose -f docker/prod/docker-compose.yaml down && \
-             sudo docker system prune -f && \
-             sudo docker-compose -f docker/prod/docker-compose.yaml up --build -d" \
-             || { echo 'Error: Failed to run Docker commands on EC2'; exit 1; }"
+          ssh -i ~/.ssh/id_rsa -o StrictHostKeyChecking=no \
+            ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} << 'EOF'
+            cd /home/${{ secrets.EC2_USER }}/downloads/telegram-relationship-bot \
+              || { echo 'Error: Failed to navigate to project directory'; exit 1; }
+            git pull origin master \
+              || { echo 'Error: Failed to pull latest changes from Git'; exit 1; }
+            sudo docker-compose -f docker/prod/docker-compose.yaml down \
+              || { echo 'Error: Failed to stop Docker containers'; exit 1; }
+            sudo docker system prune -f \
+              || { echo 'Error: Failed to prune Docker system'; exit 1; }
+            sudo docker-compose -f docker/prod/docker-compose.yaml up --build -d \
+              || { echo 'Error: Failed to rebuild and start Docker containers'; exit 1; }
+            EOF
