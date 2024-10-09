@@ -2,6 +2,7 @@
 
 import json
 import os
+import shutil
 from datetime import datetime
 from enum import Enum
 
@@ -21,6 +22,7 @@ class Data(metaclass=Singleton):
     def __init__(self):
         self.root_dir = os.path.dirname(os.path.abspath(__file__))
         self.data_file = os.path.join(self.root_dir, "data.json")
+        self.history_dir = os.path.join(self.root_dir, "history_data")
         self.template_file = os.path.join(self.root_dir, "data_template.json")
         self.data = self._load_data()
 
@@ -112,3 +114,33 @@ class Data(metaclass=Singleton):
     def store_suggestions(self, suggestions) -> None:
         self.data["suggestions"] = suggestions
         self._save_data(self.data)
+
+    def flush_for_next_day(self) -> None:
+        # Remove daily question
+        self.data["daily_question"] = ""
+        self.data["user_responses"] = {}
+        self.data["suggestions"] = ""
+        self._save_data(self.data)
+
+    def save_for_history(self) -> None:
+        """
+        Create a copy of the current data.json file in the 'history_data'
+        folder. The copied file will be named with the current date
+        (YYYYMMDD-data.json).
+        """
+        # Create the 'history_data' folder if it doesn't exist
+        if not os.path.exists(self.history_dir):
+            os.makedirs(self.history_dir)
+
+        # Create a timestamped history file name
+        date_str = datetime.now().strftime("%Y%m%d")
+        history_file = os.path.join(self.history_dir, f"{date_str}-data.json")
+
+        # Copy the current data.json to the history file
+        try:
+            shutil.copy(self.data_file, history_file)
+            logger.info(f"Copy of data.json saved in history folder: {history_file}")
+        except Exception as e:
+            logger.error(
+                f"Failed to make a copy of data.json in the history folder: {e}"
+            )

@@ -74,5 +74,11 @@ async def handle_message(update: Update, _) -> None:
 
         await update.message.reply_text(suggestions, parse_mode="MarkdownV2")
 
+        # Save the full data in history
+        data_instance.save_for_history()
+
+        # Flush the question of the day and the user_responses for the next day
+        data_instance.flush_for_next_day()
+
     # It was /answer before now it's back to empty
     data_instance.delete_last_command(user_id)
