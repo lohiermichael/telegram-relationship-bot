@@ -86,4 +86,6 @@ class AI(metaclass=Singleton):
         chain = message_template | self.model | StrOutputParser()
         suggestions = chain.invoke(self.template_variables)
 
+        data_instance.store_suggestions(suggestions)
+
         return suggestions

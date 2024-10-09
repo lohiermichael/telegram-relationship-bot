@@ -108,3 +108,7 @@ class Data(metaclass=Singleton):
             user_index += 1
 
         return data_for_suggestions
+
+    def store_suggestions(self, suggestions) -> None:
+        self.data["suggestions"] = suggestions
+        self._save_data(self.data)
