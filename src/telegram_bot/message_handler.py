@@ -53,18 +53,18 @@ async def handle_message(update: Update, _) -> None:
         await update.message.reply_text(
             textwrap.dedent(
                 """
-            You are the first one to answer the question, let's wait the second
-            answer to generate the suggestions
-            """
+                You are the first one to answer the question, let's wait the
+                second answer to generate the suggestions
+                """
             )
         )
     elif number_responses == 2:
         await update.message.reply_text(
             textwrap.dedent(
                 """
-            Both of your answers are gathered, the AI is gonna come up with
-            suggesetions
-            """
+                Both of your answers are gathered, the AI is gonna come up with
+                suggesetions
+                """
             )
         )
 
