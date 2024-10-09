@@ -14,6 +14,9 @@ logger = setup_logger()
 async def get_bot_group_id(bot: Bot) -> str:
     # Get updates to find the chat ID
     updates = await bot.get_updates()
+    if not updates:
+        logger.error("There are no updates for this bot")
+        return ""
     last_message = updates[-1].message
     if last_message is None:
         logger.error("Last update has no message, try with another one")
@@ -34,6 +37,9 @@ async def main() -> None:
     bot = Bot(token=BOT_TOKEN)
     # Get the id of the group
     bot_group_id = await get_bot_group_id(bot)
+    if not bot_group_id:
+        logger.error("Could not retrieve the group information")
+        return
 
     # send a test message in the group with the bot
     await bot.send_message(chat_id=bot_group_id, text="Test message")
