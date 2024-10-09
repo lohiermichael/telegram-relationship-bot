@@ -42,6 +42,7 @@ async def handle_message(update: Update, _) -> None:
     if not user_last_command or user_last_command != COMMAND_ANSWER:
         logger.info(f"Last command was not /{COMMAND_ANSWER}")
         await update.message.reply_text(HELPER)
+        return
 
     # Store the user's response
     text = update.message.text
