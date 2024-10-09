@@ -27,6 +27,26 @@ docker-compose --version
 mkdir downloads
 cd downloads/
 
+# Install git
+sudo yum install git -y
+git --version
+git config --global user.name "Firstname Lastname"
+git config --global user.email "email@example.com"
+
+
+ssh-keygen -t rsa -b 4096 -C "email@example.com"
+
+cat ~/.ssh/id_rsa.pub
+# Copy and store it in GitHub:  Settings > SSH and GPG keys > New SSH key
+
+# Generate Personal Access Token with ecessary scopes (e.g., repo
+# for full control of private repositories).
+# Clone the repository
+git clone https://{your-token}@github.com/lohiermichael/telegram-relationship-bot.git
+
+
+
+
 ################
 # On dev machine
 ################
@@ -42,6 +62,10 @@ base64 \
   -o aws/key.b64
 
 cat aws/key.b64 | pbcopy
+
+# Connect with ssh to the instance
+ssh -i aws/telegram-relationship-bot.pem ec2-user@{ec2_ip}
+
 
 # ######
 # On EC2

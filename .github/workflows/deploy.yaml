@@ -10,9 +10,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout the code (useful for GitHub Actions)
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # Step 2: Set up SSH (private key from GitHub Secrets)
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
@@ -20,23 +22,16 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-      - name: Copy files to EC2
-        run: |
-          scp \
-            -i ~/.ssh/id_rsa \
-            -o StrictHostKeyChecking=no \
-            -r ./docker/ ./src/ .dockerignore \
-            ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }}:/home/${{ secrets.EC2_USER }}/downloads/ \
-            || { echo 'Error: Failed to copy files to EC2'; exit 1; }
-
-      - name: SSH into EC2 and update
+      # Step 3: SSH into EC2 and perform Git pull to fetch latest changes
+      - name: SSH into EC2 and deploy
         run: |
           ssh \
             -i ~/.ssh/id_rsa \
             -o StrictHostKeyChecking=no \
             ${{ secrets.EC2_USER }}@${{ secrets.EC2_IP }} \
-            "cd downloads && \
+            "cd /home/${{ secrets.EC2_USER }}/downloads/telegram-relationship-bot && \
+             git pull origin master && \
              sudo docker-compose -f docker/prod/docker-compose.yaml down && \
              sudo docker system prune -f && \
              sudo docker-compose -f docker/prod/docker-compose.yaml up --build -d" \
-            || { echo 'Error: Failed to run Docker commands on EC2'; exit 1; }
+             || { echo 'Error: Failed to run Docker commands on EC2'; exit 1; }"
