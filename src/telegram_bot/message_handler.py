@@ -72,3 +72,6 @@ async def handle_message(update: Update, _) -> None:
         suggestions = format_markdown_v2(suggestions)
 
         await update.message.reply_text(suggestions, parse_mode="MarkdownV2")
+
+    # It was /answer before now it's back to empty
+    data_instance.delete_last_command(user_id)
