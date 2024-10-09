@@ -3,14 +3,10 @@
 import asyncio
 import os
 
-from dotenv import load_dotenv
 from telegram import Bot
 
+from scripts.utils import load_proper_env
 from src.logger import setup_logger
-
-script_directory = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(script_directory))
-load_dotenv(os.path.join(ROOT_DIR, "docker/prod/.env"))
 
 logger = setup_logger()
 
@@ -30,6 +26,7 @@ async def get_bot_group_id(bot: Bot) -> str:
 
 
 async def main() -> None:
+    load_proper_env()
     BOT_TOKEN = os.getenv("BOT_TOKEN")
     if not BOT_TOKEN:
         logger.error("THE BOT_TOKEN environment variable has bot been set properly")

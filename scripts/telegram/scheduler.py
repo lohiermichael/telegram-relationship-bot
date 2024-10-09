@@ -5,14 +5,10 @@ import os
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from apscheduler.triggers.cron import CronTrigger
-from dotenv import load_dotenv
 from telegram import Bot
 
+from scripts.utils import load_proper_env
 from src.logger import setup_logger
-
-script_directory = os.path.dirname(os.path.abspath(__file__))
-ROOT_DIR = os.path.dirname(os.path.dirname(script_directory))
-load_dotenv(os.path.join(ROOT_DIR, "docker/dev/.env"))
 
 logger = setup_logger()
 
@@ -65,4 +61,5 @@ async def main() -> None:
 
 # Run the main function
 if __name__ == "__main__":
+    load_proper_env()
     asyncio.run(main())
