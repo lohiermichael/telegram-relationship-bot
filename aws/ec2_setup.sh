@@ -45,7 +45,9 @@ cat ~/.ssh/id_rsa.pub
 git clone https://{your-token}@github.com/lohiermichael/telegram-relationship-bot.git
 
 
-
+# Install tmux
+sudo yum install -y tmux
+tmux -V
 
 ################
 # On dev machine
@@ -70,4 +72,14 @@ ssh -i aws/telegram-relationship-bot.pem ec2-user@{ec2_ip}
 # ######
 # On EC2
 # ######
+
+# Run the bot
 sudo docker-compose -f docker/prod/docker-compose.yaml up --build
+
+# Have a tmux session to see the logs
+tmux new-session -s logs
+# To later join the session
+ tmux attach-session -t logs
+
+cd downlods/telegram-relationship-bot
+sudo docker-compose -f docker/prod/docker-compose.yaml logs --follow
