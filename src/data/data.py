@@ -20,10 +20,10 @@ class UserStatus(Enum):
 
 class Data(metaclass=Singleton):
     def __init__(self):
-        self.root_dir = os.path.dirname(os.path.abspath(__file__))
-        self.data_file = os.path.join(self.root_dir, "data.json")
-        self.history_dir = os.path.join(self.root_dir, "history_data")
-        self.template_file = os.path.join(self.root_dir, "data_template.json")
+        self.data_dir = os.path.dirname(os.path.abspath(__file__))
+        self.data_file = os.path.join(self.data_dir, "data.json")
+        self.history_dir = os.path.join(self.data_dir, "history_data")
+        self.template_file = os.path.join(self.data_dir, "data_template.json")
         self.data = self._load_data()
 
     def _load_data(self):
