@@ -38,4 +38,4 @@ async def cancel(update: Update, _) -> None:
 
     data_instance.delete_last_command(user_id)
     await update.message.reply_text("Your last action has been cancelled.")
-    logger.info(f"Last command for user {user_id} cancelled.")
+    logger.info(f"Last command for user {user.name} cancelled.")
