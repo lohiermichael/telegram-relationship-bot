@@ -4,7 +4,7 @@ import logging
 import os
 
 
-def setup_logger(log_file: str = "app.log", level: str = "INFO") -> logging.Logger:
+def setup_logger(log_file: str = "app.log") -> logging.Logger:
     # Create the logger
     logger = logging.getLogger("Telegram Relationship Bot")
 
