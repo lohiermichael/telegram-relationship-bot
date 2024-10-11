@@ -4,6 +4,13 @@ services:
       context: ../..  # Build from the project root directory
       dockerfile: ./docker/prod/Dockerfile  # Use the prod Dockerfile
     container_name: telegram-relationship-prod-bot
+    volumes:
+     # Mount app.log to persist logs
+      - ./app.log:/app/app.log
+      # Mount the src/data/data.json file to persist current data
+      - ./src/data/data.json:/app/src/data/data.json
+      # Mount the src/data/history_data/ folder to persist history data
+      - ./src/data/history_data:/app/src/data/history_data
     env_file:
       - .env  # Load the prod-specific environment variables
     ports:
