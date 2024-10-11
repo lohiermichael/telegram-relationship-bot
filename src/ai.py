@@ -17,10 +17,13 @@ logger = setup_logger()
 
 QUESTION_TEMPLATE = textwrap.dedent(
     """
-    Generate a max 50-token thoughtful question that can be asked individually
-    to a man and a woman in relationship to strengthen their relationship. The
-    question should be insightful and help them understand and know each other
-    better. Be creative!
+    Generate a max 50-token thoughtful question that deals with complete
+    different topics from these:
+
+    {old_daily_questions}
+
+    It is meant to be asked individually to a man and a woman in relationship
+    help them understand each other, what they like, expect, dream about etc.
     """
 )
 
@@ -42,7 +45,7 @@ class AI(metaclass=Singleton):
     def __init__(self) -> None:
         self.template_variables: Dict[str, str] = {}
         self.messages: List[Tuple[str, str]] = []
-        self.model = ChatOpenAI(model="gpt-4o", max_tokens=200)
+        self.model = ChatOpenAI(model="gpt-4o", max_tokens=200, temperature=1)
 
     def get_daily_question(self) -> str:
         daily_question = data_instance.get_daily_question()
@@ -65,6 +68,13 @@ class AI(metaclass=Singleton):
         ]
 
         message_template = ChatPromptTemplate.from_messages(self.messages)
+        old_daily_questions = data_instance.get_old_daily_questions()
+        if not old_daily_questions:
+            logger.info("No old_daily questions")
+
+        self.template_variables.update(
+            {"old_daily_questions": "\n\n".join(old_daily_questions)}
+        )
 
         chain = message_template | self.model | StrOutputParser()
         daily_question = chain.invoke(self.template_variables)

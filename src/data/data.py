@@ -5,6 +5,7 @@ import os
 import shutil
 from datetime import datetime
 from enum import Enum
+from typing import List
 
 from src.logger import setup_logger
 from src.utils import Singleton
@@ -84,6 +85,23 @@ class Data(metaclass=Singleton):
     def store_daily_question(self, question):
         self.data["daily_question"] = question
         self._save_data(self.data)
+
+    def get_old_daily_questions(self) -> List[str]:
+        questions = []
+
+        # List all files in the history_data folder
+        for file_name in os.listdir(self.history_dir):
+            logger.debug(file_name)
+            file_path = os.path.join(self.history_dir, file_name)
+
+            # Open and read the JSON file
+            with open(file_path, "r", encoding="utf-8") as file:
+                data = json.load(file)
+                daily_question = data.get("daily_question", "")
+                if daily_question:  # Only add non-empty questions
+                    questions.append(daily_question)
+
+        return questions
 
     def store_user(self, user):
         self.data["users"][str(user.id)] = {
