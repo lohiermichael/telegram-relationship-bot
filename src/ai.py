@@ -17,10 +17,12 @@ logger = setup_logger()
 
 QUESTION_TEMPLATE = textwrap.dedent(
     """
-    Generate a max 50-token thoughtful question that can be asked individually
-    to a man and a woman in relationship to strengthen their relationship. The
-    question should be insightful and help them understand and know each other
-    better. Be creative!
+    Here is a basic question to ask individually to a man and a woman in
+    relationship:
+
+    {common_question}
+
+    Improve it and keep short under 50 tokens!
     """
 )
 
@@ -57,7 +59,9 @@ class AI(metaclass=Singleton):
         return daily_question
 
     def _generate_daily_question(self) -> str:
-        self.template_variables.update()
+        common_question = data_instance.get_common_question()
+        self.template_variables.update({"common_question": common_question})
+        data_instance.increment_common_question_index()
 
         self.messages = [
             ("system", SYSTEM_ROLE),

@@ -1,7 +1,14 @@
 {
-    "daily_question": "",
-    "last_command": {},
-    "suggestions": "",
-    "users": {},
-    "user_responses": {}
+  "daily_question": "",
+  "last_command": {},
+  "suggestions": "",
+  "users": {},
+  "user_responses": {},
+  "common_question_last_index": {
+    "past_and_future": -1,
+    "personal_growth": -1,
+    "dreams_and_ambitions": -1,
+    "values_and_emotional_intimacy": -1,
+    "just_for_fun": -1
+  }
 }

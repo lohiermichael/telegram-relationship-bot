@@ -2,6 +2,7 @@
 
 import json
 import os
+import random
 import shutil
 from datetime import datetime
 from enum import Enum
@@ -18,12 +19,24 @@ class UserStatus(Enum):
     NEED_TO_START = 3
 
 
+class CommonQuestionCategory(Enum):
+    PAST_AND_FUTURE = "past_and_future"
+    PERSONAL_GROWTH = "personal_growth"
+    DREAMS_AND_AMBITIONS = "dreams_and_ambitions"
+    VALUES_AND_EMOTIONAL_INTIMACY = "values_and_emotional_intimacy"
+    JUST_FOR_FUN = "just_for_fun"
+
+
 class Data(metaclass=Singleton):
     def __init__(self):
         self.data_dir = os.path.dirname(os.path.abspath(__file__))
         self.data_file = os.path.join(self.data_dir, "data.json")
         self.history_dir = os.path.join(self.data_dir, "history_data")
         self.template_file = os.path.join(self.data_dir, "data_template.json")
+        self.common_questions_file = os.path.join(
+            self.data_dir, "common_questions.json"
+        )
+        self.common_question_category = None
         self.data = self._load_data()
 
     def _load_data(self):
@@ -84,6 +97,66 @@ class Data(metaclass=Singleton):
     def store_daily_question(self, question):
         self.data["daily_question"] = question
         self._save_data(self.data)
+
+    def get_common_question(self) -> str:
+        """
+        Get a random common question to ask for the daily question
+        """
+        self.common_question_category = random.choice(
+            [category.value for category in CommonQuestionCategory]
+        )
+        logger.info(f"The chosen category is: {self.common_question_category}")
+
+        last_question_index = self.data["common_question_last_index"][
+            self.common_question_category
+        ]
+        logger.debug(f"The last index for that category is: {last_question_index}")
+
+        try:
+            with open(self.common_questions_file, "r") as f:
+                common_questions = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as error:
+            logger.error(
+                f"Couldn't load data from {self.common_questions_file}. "
+                f"Because of error: {error}"
+            )
+            return ""
+        chosen_question = common_questions[self.common_question_category][
+            last_question_index
+        ]
+        logger.info(f"The chosen question is: '{chosen_question}'")
+
+        return chosen_question
+
+    def increment_common_question_index(self) -> None:
+        if not self.common_question_category:
+            logger.error("The common_question_category has not been set")
+            return
+        try:
+            with open(self.common_questions_file, "r") as f:
+                common_questions = json.load(f)
+        except (FileNotFoundError, json.JSONDecodeError) as error:
+            logger.error(
+                f"Couldn't load data from {self.common_questions_file}. "
+                f"Because of error: {error}"
+            )
+            return None
+        category_length = len(common_questions[self.common_question_category])
+        category_index = self.data["common_question_last_index"][
+            self.common_question_category
+        ]
+        if category_index == category_length - 1:
+            category_index = 0
+        else:
+            category_index += 1
+        self.data["common_question_last_index"][
+            self.common_question_category
+        ] = category_index
+        self._save_data(self.data)
+        logger.info(
+            f"The question index for category {self.common_question_category} "
+            "has been increased to {category_index}"
+        )
 
     def store_user(self, user):
         self.data["users"][str(user.id)] = {
