@@ -35,7 +35,8 @@ RESPONSE_TEMPLATE = textwrap.dedent(
     - {user2_name}'s response: {user2_response}
 
     Based on these responses, provide suggestions in maximum 150 tokens on
-    how they can strengthen their relationship with concreate actions.
+    how they can strengthen their relationship with original and concreate
+    actions. Add smileys to your response.
     """
 )
 
