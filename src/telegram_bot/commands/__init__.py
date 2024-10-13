@@ -7,17 +7,6 @@ COMMAND_HELP = "help"
 COMMAND_START = "start"
 
 HELPER = f"""
-Here are the available commands:
-
-/{COMMAND_START} - start interacting with the bot
-/{COMMAND_HELP} - open the helper menu
-/{COMMAND_ANSWER} - answer to the question of the day
-/{COMMAND_CANCEL} - cancel the previously started action (ex: /{COMMAND_ANSWER})
-
-Only these commands are available for to interact with your catherapist
-"""
-
-HELPER = f"""
 Here are the available commands 🐾:
 
 /{COMMAND_START} - Start interacting with me 😺
