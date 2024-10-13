@@ -1,5 +1,6 @@
 # Copyright © Michael Lohier 2024 All rights reserved.
 
+import random
 import textwrap
 
 from dotenv import load_dotenv
@@ -7,6 +8,7 @@ from telegram.ext import Application
 
 from src.ai import AI
 from src.logger import setup_logger
+from src.telegram_bot import ROMANTIC_COUPLE_NAMES
 from src.telegram_bot.commands import COMMAND_ANSWER
 from src.utils import format_markdown_v2
 
@@ -18,16 +20,18 @@ ai = AI()
 
 async def send_scheduled_message(application: Application, group_id: str) -> None:
     daily_question = ai.get_daily_question()
-
     message = textwrap.dedent(
         f"""
-        Hey lovers,
-        Here is the question of the day:
+        Hey {random.choice(ROMANTIC_COUPLE_NAMES)} 😊,
 
-        *{daily_question}*
+        Here is the question of the day 🤔:
+
+        *{daily_question}* 💬
 
         Feel free to give your answer to this question by typing the
-        /{COMMAND_ANSWER} command.
+        /{COMMAND_ANSWER} command. ✨
+
+        Let's hear your thoughts! 💡
         """
     )
 
