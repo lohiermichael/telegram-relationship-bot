@@ -155,7 +155,7 @@ class Data(metaclass=Singleton):
         self._save_data(self.data)
         logger.info(
             f"The question index for category {self.common_question_category} "
-            "has been increased to {category_index}"
+            f"has been increased to {category_index}"
         )
 
     def store_user(self, user):
