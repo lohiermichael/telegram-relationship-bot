@@ -79,7 +79,7 @@ sudo docker-compose -f docker/prod/docker-compose.yaml up --build
 # Have a tmux session to see the logs
 tmux new-session -s logs
 # To later join the session
- tmux attach-session -t logs
+tmux attach-session -t logs
 
 cd downlods/telegram-relationship-bot
 sudo docker-compose -f docker/prod/docker-compose.yaml logs --follow
