@@ -30,11 +30,11 @@ async def handle_message(update: Update, _) -> None:
     user_status = data_instance.get_user_status(user_id)
     if user_status == UserStatus.NEED_TO_START:
         await update.message.reply_text(
-            f"You need to type /{COMMAND_START} to start using the bot"
+            f"You need to type /{COMMAND_START} to start interacting with me 🚀"
         )
         return
     if user_status == UserStatus.NOT_ALLOWED:
-        await update.message.reply_text("You are not authorized to use this bot.")
+        await update.message.reply_text("⛔ You are not authorized to use this bot. 🚫")
         return
 
     # Check the last command issued by the user
@@ -54,8 +54,8 @@ async def handle_message(update: Update, _) -> None:
         await update.message.reply_text(
             textwrap.dedent(
                 """
-                You are the first one to answer the question, let's wait the
-                second answer to generate the suggestions
+                🎉 You are the first one to answer the question! Let's wait for the
+                second answer, and then I'll share my thoughts with you. 🕒
                 """
             )
         )
@@ -63,8 +63,7 @@ async def handle_message(update: Update, _) -> None:
         await update.message.reply_text(
             textwrap.dedent(
                 """
-                Both of your answers are gathered, the AI is gonna come up with
-                suggesetions
+                ✅ Both of your answers are gathered! Here are my suggestions... 💡
                 """
             )
         )

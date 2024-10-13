@@ -31,16 +31,16 @@ async def answer(update: Update, _) -> None:
     user_status = data_instance.get_user_status(user_id)
     if user_status == UserStatus.NEED_TO_START:
         await update.message.reply_text(
-            f"You need to type /{COMMAND_START} to start using the bot"
+            f"You need to type /{COMMAND_START} to start using the bot 🚀"
         )
         return
     if user_status == UserStatus.NOT_ALLOWED:
-        await update.message.reply_text("You are not authorized to use this bot.")
+        await update.message.reply_text("⛔ You are not authorized to use this bot. 🚫")
         return
 
     if data_instance.has_user_responded(user_id):
         await update.message.reply_text(
-            "You have already responded to the question of the day."
+            "🚫 You have already responded to the question of the day. ✅"
         )
         return
 
@@ -50,10 +50,10 @@ async def answer(update: Update, _) -> None:
     await update.message.reply_text(
         textwrap.dedent(
             f"""
-            Hey {user.first_name},\n
-            Please give your answer to the question of the day:\n
-            *{daily_question}*\n
-            You need to long press this message an click on "Reply"
+            Hey {user.first_name} 👋,\n
+            Please give your answer to the question of the day 📅:\n
+            *{daily_question}* 📝\n
+            You need to long press this message and click on "Reply" 🔁.
             """
         ),
         parse_mode="MarkdownV2",

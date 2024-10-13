@@ -26,11 +26,11 @@ async def help(update: Update, _) -> None:
     user_status = data_instance.get_user_status(user_id)
     if user_status == UserStatus.NEED_TO_START:
         await update.message.reply_text(
-            f"You need to type /{COMMAND_START} to start using the bot"
+            f"You need to type /{COMMAND_START} to start using the bot 🚀"
         )
         return
     if user_status == UserStatus.NOT_ALLOWED:
-        await update.message.reply_text("You are not authorized to use this bot.")
+        await update.message.reply_text("⛔ You are not authorized to use this bot. 🚫")
         return
 
     await update.message.reply_text(HELPER)

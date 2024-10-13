@@ -23,14 +23,13 @@ async def start(update: Update, _) -> None:
     user_id = str(user.id)
     user_status = data_instance.get_user_status(user_id)
     if user_status == UserStatus.NOT_ALLOWED:
-        await update.message.reply_text("You are not authorized to use this bot.")
+        await update.message.reply_text("⛔ You are not authorized to use this bot. 🚫")
         return
     data_instance.store_user(user)
 
     await update.message.reply_text(
         f"""
-        Hello {user.first_name}! You have started interacting with the bot.
-
+        👋 Hello {user.first_name}! You have started interacting with your catherapist 🐱.
         {HELPER}
         """
     )

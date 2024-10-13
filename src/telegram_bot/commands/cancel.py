@@ -25,17 +25,19 @@ async def cancel(update: Update, _) -> None:
     user_status = data_instance.get_user_status(user_id)
     if user_status == UserStatus.NEED_TO_START:
         await update.message.reply_text(
-            f"You need to type /{COMMAND_START} to start using the bot"
+            f"You need to type /{COMMAND_START} to start using the bot 🚀"
         )
         return
     if user_status == UserStatus.NOT_ALLOWED:
-        await update.message.reply_text("You are not authorized to use this bot.")
+        await update.message.reply_text(
+            "⛔ You are not authorized to interact with the catherapist 🐱 that I am. 🚫"
+        )
         return
 
     if not data_instance.has_last_command(user_id):
-        await update.message.reply_text("No previous action to cancel.")
+        await update.message.reply_text("⚠️  No previous action to cancel. ❌")
         return
 
     data_instance.delete_last_command(user_id)
-    await update.message.reply_text("Your last action has been cancelled.")
+    await update.message.reply_text("✅ Your last action has been cancelled.")
     logger.info(f"Last command for user {user.name} cancelled.")
