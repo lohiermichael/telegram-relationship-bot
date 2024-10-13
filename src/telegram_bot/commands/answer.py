@@ -45,19 +45,16 @@ async def answer(update: Update, _) -> None:
         return
 
     daily_question = ai.get_daily_question()
-    daily_question = format_markdown_v2(daily_question)
-
-    await update.message.reply_text(
-        textwrap.dedent(
-            f"""
-            Hey {user.first_name} 👋,\n
-            Please give your answer to the question of the day 📅:\n
-            *{daily_question}* 📝\n
-            You need to long press this message and click on "Reply" 🔁.
-            """
-        ),
-        parse_mode="MarkdownV2",
+    message = textwrap.dedent(
+        f"""
+        Hey {user.first_name} 👋,\n
+        Please give your answer to the question of the day 📅:\n
+        *{daily_question} 📝 * \n
+        You need to long press this message and click on "Reply" 🔁.
+        """
     )
+    message = format_markdown_v2(message)
+    await update.message.reply_text(message, parse_mode="MarkdownV2")
 
     # Store the last command used
     data_instance.store_last_command(user_id, COMMAND_ANSWER)
