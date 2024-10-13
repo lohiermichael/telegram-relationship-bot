@@ -73,6 +73,12 @@ ssh -i aws/telegram-relationship-bot.pem ec2-user@{ec2_ip}
 # On EC2
 # ######
 
+cd downlods/telegram-relationship-bot
+
+# Create empty files
+touch app.log
+cp src/data/data_template.json src/data/data.json
+
 # Run the bot
 sudo docker-compose -f docker/prod/docker-compose.yaml up --build
 
