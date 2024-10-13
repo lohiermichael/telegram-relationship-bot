@@ -5,4 +5,5 @@ python-dotenv==1.0.1
 python-telegram-bot==21.6
 
 # Development modules
+pre_commit==4.0.1
 watchdog==5.0.3
