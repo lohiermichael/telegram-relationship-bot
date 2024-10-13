@@ -42,3 +42,23 @@ After gathering both responses, the bot analyzes the answers and suggests ways
 to deepen the relationship, providing tailored advice based on what was shared.
 
 ![Bot Suggestions](img/bot_suggestions.jpeg)
+
+
+## Setup
+
+To get started with the **Telegram Relationship Bot**, you can follow the steps
+for either **development** or **production** environments.
+
+### Development
+
+For local development and testing, follow the instructions provided in the
+[Development Setup Guide](./docs/development-setup.md). This guide includes
+details on setting up your environment, installing dependencies, and running
+the bot locally.
+
+### Production
+
+For deploying the bot in a production environment, refer to the [Production
+Setup Guide](./docs/production-setup.md). This guide covers server setup,
+environment variables, and how to ensure the bot is running smoothly for end
+users.
