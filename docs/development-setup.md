@@ -106,7 +106,12 @@ After that you should be ready to commit with git and contribute to the project.
     ```
 
     - (Optional) You can customize the bot by adding it a description and a
-    profile picture like [this one](`../img/catherapist.jpeg`).
+    profile picture like
+    <a
+        href="https://github.com/lohiermichael/telegram-relationship-bot/blob/master/img/catherapist.jpeg"
+        target="_blank">
+            this one
+    </a>.
 
 
 1. Create a Group and Add the Bot to it:
@@ -127,11 +132,17 @@ After that you should be ready to commit with git and contribute to the project.
       directory and paste the id given the script after `GROUP_CHAT_ID`.
 
     - (Optional) You can customize the group by adding it a description and a
-    profile picture like [this one](`../img/pookies_in_love_group.jpeg`).
+    profile picture like
+    <a
+        href="https://github.com/lohiermichael/telegram-relationship-bot/blob/master/img/pookies_in_love_group.jpeg"
+        target="_blank">
+            this one
+    </a>.
 
 ## Setup OpenAI
 
-1. Follow the steps of this [video](https://www.youtube.com/watch?v=eRWZuijASuU)
+1. Follow the steps of
+   <a href="https://www.youtube.com/watch?v=eRWZuijASuU" target="_blank"> this video</a>
    to get yourself an OPENAI API key.
 
 1. Save the OPENAI API key by opening the .env file in the docker/dev/
