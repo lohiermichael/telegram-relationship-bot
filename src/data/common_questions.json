@@ -10,9 +10,7 @@
     "What are your personal hopes and dreams for the future?",
     "How do you want to be remembered?",
     "What’s a defining moment in your life?",
-    "How did your parents influence your views on relationships?",
-    "What did you love to do most as a child?",
-    "How do you think your childhood has shaped who you are today?"
+    "How did your parents influence your views on relationships?"
   ],
   "personal_growth": [
     "What have you always wanted to try, but haven't yet?",
@@ -42,7 +40,6 @@
     "What would you do if you had unlimited resources?",
     "Who inspires you to follow your dreams?",
     "What’s the most daring thing you’ve ever done?",
-    "What dream have you held since childhood?",
     "What’s one thing you hope to accomplish in the next year?"
   ],
   "values_and_emotional_intimacy": [
@@ -65,7 +62,6 @@
     "If you could have dinner with any three people, dead or alive, who would they be?",
     "What's your favorite movie of all time and why?",
     "If you could travel anywhere in the world right now, where would you go?",
-    "What's a funny or embarrassing story from your childhood?",
     "If you could have any superpower, what would it be?",
     "What's your favorite way to relax?",
     "If you could live in any historical period, which one would you choose?",
@@ -76,7 +72,6 @@
     "If you could instantly learn any skill, what would it be?",
     "What food could you eat every day?",
     "If you could be any animal for a day, what would you be?",
-    "What’s the funniest thing that’s ever happened to you?",
-    "What’s your favorite childhood memory?"
+    "What’s the funniest thing that’s ever happened to you?"
   ]
 }
