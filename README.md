@@ -1,5 +1,7 @@
 # Telegram Relationship Bot
 
+![](img/introduction.jpeg)
+
 ## Project Overview
 
 The **Telegram Relationship Bot** helps couples, especially in long-distance
